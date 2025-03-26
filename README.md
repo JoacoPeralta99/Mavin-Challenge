@@ -58,7 +58,7 @@ Este proyecto es una solución full-stack que integra Next.js con LangChain.js p
 1. **Clona el repositorio:**
 
    ```bash
-   git clone <URL_DE_TU_REPO>
+   git clone https://github.com/JoacoPeralta99/Mavin-Challenge.git
    cd mavin-challenge
    ```
 
