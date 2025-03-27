@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function HomePage() {
   const [query, setQuery] = useState("");
@@ -26,12 +27,15 @@ export default function HomePage() {
         
         className="bg-gray-900 p-8 rounded shadow-md w-full max-w-md border-l-4 border-r-4 border-transparent hover:border-green-800 focus-within:border-green-800 transition-colors duration-200"
       >
+        <div className="flex justify-center mb-6">
+          <Image src="/image.png" alt="Ollama image" width={200} height={200} />
+          </div>
         <h1 className="text-2xl font-bold mb-4 text-center text-green-800">
-          Ingresa tu Consulta
+          enter your question
         </h1>
         <input 
           type="text"
-          placeholder="Escribe tu consulta aquí"
+          placeholder="Write your consult here"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
        
@@ -42,7 +46,7 @@ export default function HomePage() {
           type="submit" 
           className="w-full bg-green-700 hover:bg-green-800 text-white p-3 rounded font-bold"
         >
-          Enviar
+          Send
         </button>
       </form>
     </div>

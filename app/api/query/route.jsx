@@ -6,25 +6,22 @@ export async function POST(request) {
   try {
     const { query } = await request.json();
     if (!query) {
-      return NextResponse.json({ error: "No se proporcionó consulta" }, { status: 400 });
+      return NextResponse.json({ error: "No consultation provided" }, { status: 400 });
     }
 
     const serpApiTool = new SerpAPI(process.env.SERPAPI_API_KEY);
-    // 1. Hacer la búsqueda
     const searchResults = await serpApiTool.call(query);
 
-    // 2. Invocar a Ollama con un prompt final
     const llm = new Ollama({ 
     baseUrl: process.env.OLLAMA_BASE_URL,
     model: "llama3" });
     const finalAnswer = await llm.invoke(`
-Pregunta: ${query}
-Resultados de la búsqueda: ${JSON.stringify(searchResults)}
+Ask: ${query}
+Search results: ${JSON.stringify(searchResults)}
 
-Dame tu respuesta final en español, por favor.
+Give me your final answer in English, please.
     `);
 
-    // 3. Devolver la respuesta final
     return NextResponse.json({ response: finalAnswer });
   } catch (error) {
     console.error("Error en /api/query:", error);
