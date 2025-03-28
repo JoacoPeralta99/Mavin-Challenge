@@ -130,13 +130,13 @@ mavin-challenge/
 ├── app/
 │   ├── api/
 │   │   └── query/
-│   │       └── route.jsx
+│   │       └── route.js
 │   ├── results/
-│   │   └── page.jsx
+│   │   └── page.js
 │   ├── favicon.ico
 │   ├── globals.css
-│   ├── layout.jsx
-│   └── page.jsx
+│   ├── layout.js
+│   └── page.js
 ├── node_modules/
 ├── public/
 ├── .gitignore
@@ -149,13 +149,13 @@ mavin-challenge/
 └── tsconfig.json
 ```
 
-- **app/api/query/**: Contains the endpoint (route.jsx) that processes the user query and orchestrates the LangChain agent (calls SerpAPI and uses Ollama).
+- **app/api/query/**: Contains the endpoint (route.js) that processes the user query and orchestrates the LangChain agent (calls SerpAPI and uses Ollama).
 
-- **app/page.jsx**: The main page displaying the query form for the user.
+- **app/page.js**: The main page displaying the query form for the user.
 
-- **app/results/page.jsx**: The page where the final response from the agent is rendered.
+- **app/results/page.js**: The page where the final response from the agent is rendered.
 
-- **app/layout.jsx**: Global layout that wraps all pages, importing global styles and setting the base structure (HTML and body).
+- **app/layout.js**: Global layout that wraps all pages, importing global styles and setting the base structure (HTML and body).
 
 - **styles/globals.css**: Global styles file (including Tailwind CSS) applied across the application.
 
