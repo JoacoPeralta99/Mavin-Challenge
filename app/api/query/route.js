@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { Ollama } from "@langchain/ollama";
 import { SerpAPI } from "@langchain/community/tools/serpapi";
 
 export async function POST(request) {
@@ -8,23 +7,30 @@ export async function POST(request) {
     if (!query) {
       return NextResponse.json({ error: "No consultation provided" }, { status: 400 });
     }
-
+    
     const serpApiTool = new SerpAPI(process.env.SERPAPI_API_KEY);
     const searchResults = await serpApiTool.call(query);
 
-    const llm = new Ollama({ 
-    baseUrl: process.env.OLLAMA_BASE_URL,
-    model: "llama3" });
-    const finalAnswer = await llm.invoke(`
-Ask: ${query}
-Search results: ${JSON.stringify(searchResults)}
+    const payload = {
+      query: query,
+      searchResults: searchResults
+    };
 
-Give me your final answer in English, please.
-    `);
+    const pythonResponse = await fetch(process.env.PYTHON_SERVICE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-    return NextResponse.json({ response: finalAnswer });
+    if (!pythonResponse.ok) {
+      const errorData = await pythonResponse.json();
+      return NextResponse.json({ error: errorData.detail }, { status: pythonResponse.status });
+    }
+
+    const data = await pythonResponse.json();
+    return NextResponse.json({ response: data.response });
   } catch (error) {
-    console.error("Error en /api/query:", error);
+    console.error("Error in /api/query:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
