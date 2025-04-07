@@ -30,8 +30,9 @@ This project is a full-stack solution that integrates Next.js with LangChain.js 
 
 - **Query Form:** A page where the user enters their query.
 
-- **API Route in Next.js:** An endpoint that triggers a LangChain.js agent.
+- **API Route in Next.js:** An endpoint that triggers a LangChain.js agent and sends the query to the Python microservice.
 
+- **Python Microservice:** Service in FastAPI that receives the query enriched with the search results, calls Ollama to generate the final response and returns it.
 - **Uses a Web Search Tool:** (SerpAPI via @langchain/community).
 
 - **Integrates a Local LLM:** Through the Ollama extension.
@@ -74,7 +75,7 @@ npm install
 Create a .env (or .env.local) file in the project root with the following content (replace the values as needed):
 
     SERPAPI_API_KEY=tu_clave_valida_de_serpapi
-    OLLAMA_BASE_URL=http://localhost:11434
+    PYTHON_SERVICE=http://127.0.0.1:8000/llm
 
 4 **Tailwind CSS Configuration**
 
@@ -111,6 +112,12 @@ Ensure Ollama is running and that the required model (e.g., llama3) is downloade
 ollama run llama3
 ```
 
+**Python Service:**: installs the Python dependencies and lifts the service.
+
+```bash
+uvicorn service.app:app --reload --port 8000
+```
+
 6. **Test the Application:**
 
 - Enter a query in the application form.
@@ -139,6 +146,8 @@ mavin-challenge/
 │   └── page.js
 ├── node_modules/
 ├── public/
+|── service/
+|   └── app.py
 ├── .gitignore
 ├── jsconfig.json
 ├── package.json
@@ -149,11 +158,13 @@ mavin-challenge/
 └── tsconfig.json
 ```
 
-- **app/api/query/**: Contains the endpoint (route.js) that processes the user query and orchestrates the LangChain agent (calls SerpAPI and uses Ollama).
+- **app/api/query/**: It handles the user's query, fetches results from SerpAPI and sends the data to the Python microservice.
 
 - **app/page.js**: The main page displaying the query form for the user.
 
 - **app/results/page.js**: The page where the final response from the agent is rendered.
+
+- **python_service/app.py**: Service in FastAPI that receives the query and search results, builds a prompt for Ollama and returns the final response.
 
 - **app/layout.js**: Global layout that wraps all pages, importing global styles and setting the base structure (HTML and body).
 
@@ -208,8 +219,8 @@ Uses the Ollama LangChain.js extension to run a local LLM. Ensure that Ollama is
 ```mermaid
 graph TD
     A[User] -->|enter query| B(Form Next.js)
-    B -->|Send POST /api/query| C[Endpoint API en Next.js]
-    C --> D[Agent LangChain.js]
+    B -->|Send POST /api/query| C[Endpoint API]
+    C --> D[Agent LangChain]
     D --> E[search tool SerpAPI]
     D --> F[LLM Local OLLAMA]
     E -- Results --> D
